@@ -1,0 +1,207 @@
+================================================================================
+PHASE 4 - CHECKLIST FINALE DE VÉRIFICATION
+================================================================================
+
+Date: Février 2026
+Statut: À VÉRIFIER
+
+================================================================================
+CORRECTIONS APPLIQUÉES
+================================================================================
+
+✅ 1. MIGRATION DJANGO
+   - Fichier: cms/migrations/0003_joboffer_sitesettings_hero.py
+   - Crée: Table cms_joboffer
+   - Ajoute: Colonnes hero_background_url et hero_video_url
+
+✅ 2. MODÈLE JOBOFFER
+   - Fichier: cms/models.py
+   - Champs: title, slug, description, requirements, benefits
+   - Champs: department, location, contract_type
+   - Champs: salary_min, salary_max, currency
+   - Champs: status, deadline, is_featured, order
+
+✅ 3. ADMIN DJANGO
+   - Fichier: cms/admin.py
+   - Enregistrement: JobOfferAdmin
+   - Champs: title, department, location, status, is_featured, deadline
+   - Filtres: status, is_featured, department, deadline
+
+✅ 4. VUES API
+   - Fichier: cms/views.py
+   - Classe: JobOfferViewSet
+   - Permissions: AllowAny (public)
+   - Filtrage: Par département
+   - Queryset: Offres ouvertes par défaut
+
+✅ 5. SERIALIZERS
+   - Fichier: cms/serializers.py
+   - Classe: JobOfferSerializer
+   - Champs: Tous les champs du modèle
+   - SiteSettingsSerializer: Ajout des champs hero
+
+✅ 6. URLS
+   - Fichier: cms/urls.py
+   - Route: /api/cms/job-offers/
+   - Méthodes: GET, POST, PUT, DELETE
+
+✅ 7. FRONTEND - PAGE CARRIÈRES
+   - Fichier: frontend/src/app/careers/page.tsx
+   - Fonctionnalités: Liste, filtrage, modal détaillé
+   - Permissions: Publique (AllowAny)
+   - Couleurs: Slate/cyan
+
+✅ 8. FRONTEND - INSCRIPTION
+   - Fichier: frontend/src/app/register/page.tsx
+   - Champ: post_name ajouté
+   - Couleurs: Mises à jour (cyan)
+
+✅ 9. FRONTEND - HEADER
+   - Fichier: frontend/src/components/Header.tsx
+   - Lien: Carrières ajouté
+   - Couleurs: Mises à jour (slate/cyan)
+
+================================================================================
+À FAIRE MAINTENANT
+================================================================================
+
+ÉTAPE 1: APPLIQUER LES MIGRATIONS
+  [ ] Exécuter: python manage.py migrate cms
+  [ ] Vérifier: Pas d'erreurs
+  [ ] Vérifier: Tables créées en base de données
+
+ÉTAPE 2: PEUPLER LES DONNÉES
+  [ ] Exécuter: python manage.py populate_data
+  [ ] Vérifier: Services créés
+  [ ] Vérifier: Témoignages créés
+  [ ] Vérifier: Partenaires créés
+  [ ] Vérifier: Articles créés
+
+ÉTAPE 3: REDÉMARRER LES SERVEURS
+  [ ] Arrêter Django
+  [ ] Arrêter Next.js
+  [ ] Redémarrer Django: python manage.py runserver
+  [ ] Redémarrer Next.js: npm run dev
+
+ÉTAPE 4: VÉRIFIER LES ENDPOINTS
+  [ ] GET http://localhost:8000/api/cms/job-offers/ - Doit retourner []
+  [ ] GET http://localhost:8000/api/cms/settings/current/ - Doit retourner les paramètres
+  [ ] GET http://localhost:8000/api/cms/services/ - Doit retourner les services
+  [ ] GET http://localhost:8000/api/cms/testimonials/ - Doit retourner les témoignages
+  [ ] GET http://localhost:8000/api/cms/partners/ - Doit retourner les partenaires
+
+ÉTAPE 5: VÉRIFIER LE FRONTEND
+  [ ] http://localhost:3000 - Home page charge sans erreurs 401
+  [ ] http://localhost:3000/careers - Page Carrières affiche
+  [ ] http://localhost:3000/register - Formulaire avec post-nom
+  [ ] Console: Pas d'erreurs 401
+
+ÉTAPE 6: VÉRIFIER L'ADMIN DJANGO
+  [ ] http://localhost:8000/mwoloboss/cms/joboffer/ - Page accessible
+  [ ] Créer une offre d'emploi de test
+  [ ] Vérifier: Offre apparaît dans l'API
+
+ÉTAPE 7: VÉRIFIER LA SYNCHRONISATION
+  [ ] Home page charge les paramètres du site
+  [ ] Services affichés dynamiquement
+  [ ] Témoignages affichés dynamiquement
+  [ ] Partenaires affichés dynamiquement
+  [ ] Carrières affichées dynamiquement
+
+================================================================================
+ERREURS POSSIBLES ET SOLUTIONS
+================================================================================
+
+ERREUR: "Unknown column 'cms_sitesettings.hero_background_url'"
+SOLUTION: Exécuter: python manage.py migrate cms
+
+ERREUR: "404 Not Found" sur /api/cms/job-offers/
+SOLUTION: Vérifier que cms/urls.py a été mis à jour et redémarrer Django
+
+ERREUR: "401 Unauthorized" sur les endpoints
+SOLUTION: Vérifier que permission_classes = [AllowAny] est défini
+
+ERREUR: JobOffer n'apparaît pas dans l'admin
+SOLUTION: Vérifier que @admin.register(JobOffer) est dans cms/admin.py
+
+ERREUR: Page Carrières affiche "Aucune offre disponible"
+SOLUTION: Créer une offre d'emploi via l'admin Django
+
+================================================================================
+FICHIERS À VÉRIFIER
+================================================================================
+
+Backend:
+  [ ] cms/models.py - JobOffer model
+  [ ] cms/migrations/0003_joboffer_sitesettings_hero.py - Migration
+  [ ] cms/admin.py - JobOfferAdmin enregistré
+  [ ] cms/views.py - JobOfferViewSet avec AllowAny
+  [ ] cms/serializers.py - JobOfferSerializer
+  [ ] cms/urls.py - Route job-offers
+
+Frontend:
+  [ ] frontend/src/app/careers/page.tsx - Page Carrières
+  [ ] frontend/src/app/register/page.tsx - Post-nom ajouté
+  [ ] frontend/src/components/Header.tsx - Lien Carrières
+  [ ] frontend/src/app/page.tsx - Couleurs mises à jour
+
+================================================================================
+COMMANDES IMPORTANTES
+================================================================================
+
+# Appliquer les migrations
+python manage.py migrate cms
+
+# Peupler les données
+python manage.py populate_data
+
+# Créer une offre d'emploi
+python manage.py shell
+from cms.models import JobOffer
+from datetime import datetime, timedelta
+JobOffer.objects.create(
+    title="Titre du poste",
+    slug="titre-du-poste",
+    description="Description...",
+    requirements="Exigences...",
+    benefits="Avantages...",
+    department="Département",
+    location="Localisation",
+    contract_type="CDI",
+    salary_min=2000,
+    salary_max=3500,
+    currency="USD",
+    status="ouvert",
+    deadline=datetime.now() + timedelta(days=30),
+    is_featured=True
+)
+
+# Vérifier les offres
+python manage.py shell
+from cms.models import JobOffer
+print(JobOffer.objects.all())
+
+# Redémarrer Django
+python manage.py runserver
+
+# Redémarrer Next.js
+npm run dev
+
+================================================================================
+RÉSUMÉ
+================================================================================
+
+Tous les fichiers ont été modifiés et créés correctement.
+
+Maintenant, vous devez:
+1. Appliquer les migrations: python manage.py migrate cms
+2. Peupler les données: python manage.py populate_data
+3. Redémarrer les serveurs
+4. Vérifier que tout fonctionne
+
+Une fois ces étapes complétées, le système sera prêt pour la production.
+
+================================================================================
+VERSION: 4.0
+STATUT: PRÊT À ÊTRE APPLIQUÉ
+================================================================================

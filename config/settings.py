@@ -1,0 +1,363 @@
+from pathlib import Path
+from decouple import config, Csv
+from datetime import timedelta
+import pymysql
+
+# Initialiser PyMySQL comme driver MySQL
+pymysql.install_as_MySQLdb()
+
+BASE_DIR = Path(__file__).resolve().parent.parent
+
+SECRET_KEY = config('SECRET_KEY', default='django-insecure-dev-key-change-in-production')
+DEBUG = config('DEBUG', default=True, cast=bool)
+ALLOWED_HOSTS = config('ALLOWED_HOSTS', default='localhost,127.0.0.1', cast=Csv())
+
+INSTALLED_APPS = [
+    'jazzmin',
+    'django.contrib.admin',
+    'django.contrib.auth',
+    'django.contrib.contenttypes',
+    'django.contrib.sessions',
+    'django.contrib.messages',
+    'django.contrib.staticfiles',
+    
+    'rest_framework',
+    'rest_framework_simplejwt',
+    'corsheaders',
+    'django_filters',
+    'drf_spectacular',
+    
+    'core',
+    'geo',
+    'accounts',
+    'hr',
+    'crm',
+    'billing',
+    'operations',
+    'support',
+    'cms',
+    'agencies',
+    'appointments',
+]
+
+MIDDLEWARE = [
+    'django.middleware.security.SecurityMiddleware',
+    'corsheaders.middleware.CorsMiddleware',
+    'django.contrib.sessions.middleware.SessionMiddleware',
+    'django.middleware.common.CommonMiddleware',
+    'django.middleware.csrf.CsrfViewMiddleware',
+    'django.contrib.auth.middleware.AuthenticationMiddleware',
+    'django.contrib.messages.middleware.MessageMiddleware',
+    'django.middleware.clickjacking.XFrameOptionsMiddleware',
+]
+
+ROOT_URLCONF = 'config.urls'
+
+TEMPLATES = [
+    {
+        'BACKEND': 'django.template.backends.django.DjangoTemplates',
+        'DIRS': [BASE_DIR / 'templates'],
+        'APP_DIRS': True,
+        'OPTIONS': {
+            'context_processors': [
+                'django.template.context_processors.request',
+                'django.contrib.auth.context_processors.auth',
+                'django.contrib.messages.context_processors.messages',
+            ],
+        },
+    },
+]
+
+WSGI_APPLICATION = 'config.wsgi.application'
+
+DATABASES = {
+    'default': {
+        'ENGINE': config('DB_ENGINE', default='django.db.backends.mysql'),
+        'NAME': config('DB_NAME', default='mwoloenergysystems'),
+        'USER': config('DB_USER', default='root'),
+        'PASSWORD': config('DB_PASSWORD', default=''),
+        'HOST': config('DB_HOST', default='localhost'),
+        'PORT': config('DB_PORT', default='3306'),
+    }
+}
+
+AUTH_PASSWORD_VALIDATORS = [
+    {'NAME': 'django.contrib.auth.password_validation.UserAttributeSimilarityValidator'},
+    {'NAME': 'django.contrib.auth.password_validation.MinimumLengthValidator'},
+    {'NAME': 'django.contrib.auth.password_validation.CommonPasswordValidator'},
+    {'NAME': 'django.contrib.auth.password_validation.NumericPasswordValidator'},
+]
+
+AUTH_USER_MODEL = 'accounts.User'
+
+LANGUAGE_CODE = 'fr-FR'
+TIME_ZONE = config('TIME_ZONE', default='Africa/Kinshasa')
+USE_I18N = True
+USE_TZ = True
+
+STATIC_URL = '/static/'
+STATIC_ROOT = BASE_DIR / 'staticfiles'
+MEDIA_URL = '/media/'
+MEDIA_ROOT = BASE_DIR / 'media'
+
+DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
+
+# REST Framework
+REST_FRAMEWORK = {
+    'DEFAULT_AUTHENTICATION_CLASSES': [
+        'rest_framework_simplejwt.authentication.JWTAuthentication',
+    ],
+    'DEFAULT_PERMISSION_CLASSES': [
+        'rest_framework.permissions.AllowAny',
+    ],
+    'DEFAULT_FILTER_BACKENDS': [
+        'django_filters.rest_framework.DjangoFilterBackend',
+        'rest_framework.filters.SearchFilter',
+        'rest_framework.filters.OrderingFilter',
+    ],
+    'DEFAULT_PAGINATION_CLASS': 'rest_framework.pagination.PageNumberPagination',
+    'PAGE_SIZE': 20,
+    'DEFAULT_SCHEMA_CLASS': 'drf_spectacular.openapi.AutoSchema',
+}
+
+# JWT
+SIMPLE_JWT = {
+    'ACCESS_TOKEN_LIFETIME': timedelta(hours=1),
+    'REFRESH_TOKEN_LIFETIME': timedelta(days=7),
+    'ALGORITHM': 'HS256',
+    'SIGNING_KEY': config('JWT_SECRET_KEY', default=SECRET_KEY),
+}
+
+# CORS - Autorise les 3 apps frontend
+CORS_ALLOWED_ORIGINS = config(
+    'CORS_ALLOWED_ORIGINS',
+    default='http://localhost:3000,http://localhost:3001,http://localhost:3002,http://localhost:8000,http://127.0.0.1:3000,http://127.0.0.1:3001,http://127.0.0.1:3002,http://127.0.0.1:8000',
+    cast=Csv()
+)
+
+# En mode développement, autorise toutes les origines
+CORS_ALLOW_ALL_ORIGINS = DEBUG
+
+CORS_ALLOW_CREDENTIALS = True
+CORS_ALLOW_HEADERS = [
+    'accept',
+    'accept-encoding',
+    'authorization',
+    'content-type',
+    'dnt',
+    'origin',
+    'user-agent',
+    'x-csrftoken',
+    'x-requested-with',
+    'x-employee-badge',
+]
+
+# Celery
+CELERY_BROKER_URL = config('CELERY_BROKER_URL', default='redis://localhost:6379/0')
+CELERY_RESULT_BACKEND = config('CELERY_RESULT_BACKEND', default='redis://localhost:6379/0')
+CELERY_ACCEPT_CONTENT = ['json']
+CELERY_TASK_SERIALIZER = 'json'
+
+# Celery Beat Schedule
+from .celery_beat_schedule import CELERY_BEAT_SCHEDULE
+
+# Email
+EMAIL_BACKEND = config('EMAIL_BACKEND', default='django.core.mail.backends.console.EmailBackend')
+EMAIL_HOST = config('EMAIL_HOST', default='smtp.gmail.com')
+EMAIL_PORT = config('EMAIL_PORT', default=587, cast=int)
+EMAIL_HOST_USER = config('EMAIL_HOST_USER', default='')
+EMAIL_HOST_PASSWORD = config('EMAIL_HOST_PASSWORD', default='')
+EMAIL_USE_TLS = True
+DEFAULT_FROM_EMAIL = config('DEFAULT_FROM_EMAIL', default='noreply@mwolo.energy')
+
+# Jazzmin
+JAZZMIN_SETTINGS = {
+    'site_title': 'Mwolo Energy',
+    'site_header': 'Mwolo Energy Systems',
+    'site_brand': 'Mwolo',
+    'site_logo': None,
+    'login_logo': None,
+    'login_logo_dark': None,
+    'site_logo_classes': 'img-circle',
+    'site_icon': None,
+    'welcome_sign': 'Bienvenue sur Mwolo Energy Systems',
+    'copyright': 'Mwolo Energy Systems © 2026',
+    'search_model': ['accounts.User', 'crm.Client', 'hr.Employee'],
+    'user_avatar': None,
+    
+    # UI
+    'topmenu_links': [
+        {'name': 'Accueil', 'url': 'admin:index', 'permissions': ['auth.view_user']},
+        {'name': 'Site Web', 'url': '/', 'new_window': True},
+        {'name': 'API Docs', 'url': '/api/docs/', 'new_window': True},
+    ],
+    
+    'usermenu_links': [
+        {'name': 'Support', 'url': '/support/', 'new_window': True, 'icon': 'fas fa-headset'},
+    ],
+    
+    'show_sidebar': True,
+    'navigation_expanded': True,
+    'hide_apps': [],
+    'hide_models': [],
+    
+    # Ordre des apps dans le menu
+    'order_with_respect_to': [
+        'accounts',
+        'crm',
+        'billing',
+        'hr',
+        'appointments',
+        'operations',
+        'support',
+        'agencies',
+        'cms',
+        'geo',
+        'auth',
+    ],
+    
+    # Icônes pour toutes les apps et modèles
+    'icons': {
+        # Auth Django
+        'auth': 'fas fa-lock',
+        'auth.user': 'fas fa-user',
+        'auth.group': 'fas fa-users-cog',
+        
+        # Accounts
+        'accounts': 'fas fa-users',
+        'accounts.user': 'fas fa-user-circle',
+        'accounts.permission': 'fas fa-key',
+        'accounts.auditlog': 'fas fa-history',
+        
+        # CRM
+        'crm': 'fas fa-handshake',
+        'crm.client': 'fas fa-user-tie',
+        'crm.site': 'fas fa-map-marker-alt',
+        'crm.contract': 'fas fa-file-contract',
+        
+        # Billing
+        'billing': 'fas fa-file-invoice-dollar',
+        'billing.invoice': 'fas fa-file-invoice',
+        'billing.payment': 'fas fa-credit-card',
+        'billing.subscription': 'fas fa-receipt',
+        'billing.tariff': 'fas fa-tags',
+        'billing.meter': 'fas fa-tachometer-alt',
+        'billing.meterreading': 'fas fa-digital-tachograph',
+        
+        # HR
+        'hr': 'fas fa-users-cog',
+        'hr.employee': 'fas fa-id-badge',
+        'hr.employeebadge': 'fas fa-id-card',
+        'hr.badgescanlog': 'fas fa-qrcode',
+        'hr.leavetype': 'fas fa-calendar-alt',
+        'hr.leave': 'fas fa-plane-departure',
+        'hr.attendance': 'fas fa-user-clock',
+        'hr.payroll': 'fas fa-money-check-alt',
+        
+        # Appointments / Queue
+        'appointments': 'fas fa-calendar-check',
+        'appointments.servicetype': 'fas fa-concierge-bell',
+        'appointments.appointment': 'fas fa-calendar-plus',
+        'appointments.timeslot': 'fas fa-clock',
+        'appointments.counter': 'fas fa-desktop',
+        'appointments.queueticket': 'fas fa-ticket-alt',
+        
+        # Operations
+        'operations': 'fas fa-cogs',
+        'operations.project': 'fas fa-project-diagram',
+        'operations.task': 'fas fa-tasks',
+        'operations.workorder': 'fas fa-clipboard-list',
+        'operations.installation': 'fas fa-plug',
+        
+        # Support
+        'support': 'fas fa-headset',
+        'support.ticket': 'fas fa-life-ring',
+        'support.ticketmessage': 'fas fa-comments',
+        'support.faq': 'fas fa-question-circle',
+        
+        # Agencies
+        'agencies': 'fas fa-building',
+        'agencies.agency': 'fas fa-store',
+        
+        # CMS
+        'cms': 'fas fa-newspaper',
+        'cms.page': 'fas fa-file-alt',
+        'cms.blogpost': 'fas fa-blog',
+        'cms.service': 'fas fa-concierge-bell',
+        'cms.testimonial': 'fas fa-quote-right',
+        'cms.partner': 'fas fa-handshake',
+        'cms.gallery': 'fas fa-images',
+        'cms.galleryimage': 'fas fa-image',
+        'cms.lead': 'fas fa-funnel-dollar',
+        'cms.sitesettings': 'fas fa-sliders-h',
+        'cms.joboffer': 'fas fa-briefcase',
+        'cms.jobapplication': 'fas fa-file-alt',
+        'cms.faq': 'fas fa-question',
+        'cms.advantage': 'fas fa-star',
+        'cms.newslettersubscriber': 'fas fa-envelope-open-text',
+        
+        # Geo
+        'geo': 'fas fa-globe-africa',
+        'geo.country': 'fas fa-flag',
+        'geo.nationality': 'fas fa-passport',
+        'geo.province': 'fas fa-map',
+        'geo.commune': 'fas fa-city',
+        'geo.territory': 'fas fa-map-pin',
+        
+        # Core
+        'core': 'fas fa-cog',
+        'core.setting': 'fas fa-sliders-h',
+    },
+    
+    # Badges sur les icônes du menu
+    'default_icon_parents': 'fas fa-folder',
+    'default_icon_children': 'fas fa-circle',
+    
+    # Related modal
+    'related_modal_active': True,
+    
+    # Thème
+    'custom_css': None,
+    'custom_js': None,
+    'use_google_fonts_cdn': True,
+    'show_ui_builder': False,
+    
+    'changeform_format': 'horizontal_tabs',
+    'changeform_format_overrides': {
+        'accounts.user': 'collapsible',
+        'crm.client': 'collapsible',
+        'hr.employee': 'collapsible',
+    },
+}
+
+JAZZMIN_UI_TWEAKS = {
+    'navbar_small_text': False,
+    'footer_small_text': False,
+    'body_small_text': False,
+    'brand_small_text': False,
+    'brand_colour': 'navbar-cyan',
+    'accent': 'accent-cyan',
+    'navbar': 'navbar-dark',
+    'no_navbar_border': False,
+    'navbar_fixed': True,
+    'layout_boxed': False,
+    'footer_fixed': False,
+    'sidebar_fixed': True,
+    'sidebar': 'sidebar-dark-cyan',
+    'sidebar_nav_small_text': False,
+    'sidebar_disable_expand': False,
+    'sidebar_nav_child_indent': True,
+    'sidebar_nav_compact_style': False,
+    'sidebar_nav_legacy_style': False,
+    'sidebar_nav_flat_style': False,
+    'theme': 'cyborg',
+    'dark_mode_theme': 'cyborg',
+    'button_classes': {
+        'primary': 'btn-primary',
+        'secondary': 'btn-secondary',
+        'info': 'btn-info',
+        'warning': 'btn-warning',
+        'danger': 'btn-danger',
+        'success': 'btn-success'
+    }
+}

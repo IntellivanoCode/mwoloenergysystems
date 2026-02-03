@@ -1,0 +1,50 @@
+{
+  "expo": {
+    "name": "Mwolo Energy Systems Agency",
+    "slug": "mwolo-energy-agency",
+    "version": "1.0.0",
+    "orientation": "portrait",
+    "icon": "./assets/icon.png",
+    "userInterfaceStyle": "light",
+    "newArchEnabled": true,
+    "splash": {
+      "image": "./assets/splash-icon.png",
+      "resizeMode": "contain",
+      "backgroundColor": "#059669"
+    },
+    "ios": {
+      "supportsTablet": true,
+      "bundleIdentifier": "com.mwoloenergy.agency"
+    },
+    "android": {
+      "package": "com.mwoloenergy.agency",
+      "adaptiveIcon": {
+        "foregroundImage": "./assets/adaptive-icon.png",
+        "backgroundColor": "#059669"
+      },
+      "edgeToEdgeEnabled": true,
+      "permissions": [
+        "android.permission.CAMERA",
+        "android.permission.ACCESS_FINE_LOCATION"
+      ]
+    },
+    "web": {
+      "favicon": "./assets/favicon.png",
+      "bundler": "metro"
+    },
+    "plugins": [
+      [
+        "expo-camera",
+        {
+          "cameraPermission": "L'application utilise la caméra pour scanner les badges et codes QR."
+        }
+      ],
+      [
+        "expo-location",
+        {
+          "locationWhenInUsePermission": "L'application utilise votre position pour la géolocalisation."
+        }
+      ]
+    ]
+  }
+}

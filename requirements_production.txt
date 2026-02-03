@@ -1,0 +1,46 @@
+# Mwolo Energy Systems - Production Requirements
+# Pour déploiement sur Render/Railway/DigitalOcean
+
+# Django Core
+Django==4.2.11
+djangorestframework==3.14.0
+django-jazzmin==3.0.1
+djangorestframework-simplejwt==5.5.1
+
+# Database
+PyMySQL==1.1.0
+dj-database-url==2.1.0
+mysqlclient==2.2.0; sys_platform != 'win32'
+cryptography==41.0.7
+
+# Cache & Task Queue
+redis==5.0.1
+celery==5.3.4
+
+# Configuration
+python-decouple==3.8
+
+# Media & Files
+pillow==10.1.0
+whitenoise==6.6.0
+
+# API
+django-cors-headers==4.3.1
+django-filter==23.5
+drf-spectacular==0.27.0
+
+# PDF Generation
+reportlab==4.0.9
+weasyprint==60.1
+
+# Utilities
+phonenumbers==8.13.0
+django-extensions==3.2.3
+django-timezone-field==6.1.0
+
+# Production Server
+gunicorn==21.2.0
+uvicorn==0.25.0
+
+# Monitoring (optional)
+sentry-sdk==1.39.1

@@ -1,0 +1,59 @@
+{
+  "expo": {
+    "name": "Mwolo Energy Systems",
+    "slug": "mwolo-energy-client",
+    "version": "1.0.0",
+    "orientation": "portrait",
+    "icon": "./assets/icon.png",
+    "userInterfaceStyle": "light",
+    "newArchEnabled": true,
+    "splash": {
+      "image": "./assets/splash-icon.png",
+      "resizeMode": "contain",
+      "backgroundColor": "#0EA5E9"
+    },
+    "ios": {
+      "supportsTablet": true,
+      "bundleIdentifier": "com.mwoloenergy.client",
+      "infoPlist": {
+        "NSLocationWhenInUseUsageDescription": "L'application utilise votre position pour trouver les agences les plus proches.",
+        "NSCameraUsageDescription": "L'application utilise la caméra pour scanner les codes QR des factures."
+      }
+    },
+    "android": {
+      "package": "com.mwoloenergy.client",
+      "adaptiveIcon": {
+        "foregroundImage": "./assets/adaptive-icon.png",
+        "backgroundColor": "#0EA5E9"
+      },
+      "edgeToEdgeEnabled": true,
+      "permissions": [
+        "android.permission.ACCESS_FINE_LOCATION",
+        "android.permission.ACCESS_COARSE_LOCATION",
+        "android.permission.CAMERA"
+      ]
+    },
+    "web": {
+      "favicon": "./assets/favicon.png"
+    },
+    "extra": {
+      "eas": {
+        "projectId": "mwolo-energy-client"
+      }
+    },
+    "plugins": [
+      [
+        "expo-location",
+        {
+          "locationAlwaysAndWhenInUsePermission": "Permet de trouver les agences proches."
+        }
+      ],
+      [
+        "expo-camera",
+        {
+          "cameraPermission": "Permet de scanner les codes QR."
+        }
+      ]
+    ]
+  }
+}

@@ -1,0 +1,98 @@
+# Python
+__pycache__/
+*.py[cod]
+*$py.class
+*.so
+.Python
+env/
+venv/
+ENV/
+build/
+develop-eggs/
+dist/
+downloads/
+eggs/
+.eggs/
+lib/
+lib64/
+parts/
+sdist/
+var/
+wheels/
+*.egg-info/
+.installed.cfg
+*.egg
+
+# Django
+*.log
+local_settings.py
+db.sqlite3
+/media
+/staticfiles
+
+# IDE
+.vscode/
+.idea/
+*.swp
+*.swo
+*~
+.DS_Store
+
+# Environment
+.env
+.env.local
+.env.*.local
+.env.railway
+.env.production
+
+# Docker
+docker-compose.override.yml
+
+# OS
+.DS_Store
+
+# Data backups (sensitive)
+data_backup.json
+data_backup_utf8.json
+data_new.json
+data_essential.json
+data_crm.json
+data_clean.json
+load_data_railway.py
+
+# Node modules
+node_modules/
+
+# Expo/React Native
+.expo/
+*.jks
+*.p8
+*.p12
+*.key
+*.mobileprovision
+*.orig.*
+web-build/
+
+# Next.js
+.next/
+out/
+
+# Log files (can be huge)
+*.err
+*.log
+frontend_run.err
+backend_run.err
+backend_run.log
+Thumbs.db
+
+# Testing
+.coverage
+htmlcov/
+.pytest_cache/
+
+# Node (for frontend)
+node_modules/
+npm-debug.log
+yarn-error.log
+.next/
+out/

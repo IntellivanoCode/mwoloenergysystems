@@ -1,0 +1,97 @@
+@import "tailwindcss";
+
+:root {
+  --background: #0f172a;
+  --foreground: #f8fafc;
+  --primary: #0891b2;
+  --primary-dark: #0e7490;
+  --accent: #f59e0b;
+}
+
+@theme inline {
+  --color-background: var(--background);
+  --color-foreground: var(--foreground);
+  --font-sans: var(--font-geist-sans);
+  --font-mono: var(--font-geist-mono);
+}
+
+body {
+  background: var(--background);
+  color: var(--foreground);
+  font-family: Arial, Helvetica, sans-serif;
+  /* Empêcher le scroll sur les bornes */
+  overflow: hidden;
+  /* Désactiver la sélection de texte pour les bornes tactiles */
+  user-select: none;
+  -webkit-user-select: none;
+}
+
+/* Agency App - Optimisé pour écrans tactiles et bornes */
+html {
+  color-scheme: dark;
+  /* Empêcher le zoom sur double-tap */
+  touch-action: manipulation;
+}
+
+/* Tailles de police adaptatives pour différents écrans */
+@media (min-width: 1920px) {
+  html { font-size: 20px; }
+}
+
+@media (min-width: 2560px) {
+  html { font-size: 24px; }
+}
+
+/* Pour les petites tablettes */
+@media (max-width: 768px) {
+  html { font-size: 14px; }
+}
+
+/* Animations fluides pour les files d'attente */
+@keyframes slideIn {
+  from { opacity: 0; transform: translateX(-20px); }
+  to { opacity: 1; transform: translateX(0); }
+}
+
+@keyframes slideUp {
+  from { opacity: 0; transform: translateY(20px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+
+@keyframes blink {
+  0%, 50%, 100% { opacity: 1; }
+  25%, 75% { opacity: 0.5; }
+}
+
+@keyframes countUp {
+  from { transform: scale(1.2); }
+  to { transform: scale(1); }
+}
+
+.animate-slide-in {
+  animation: slideIn 0.5s ease-out;
+}
+
+.animate-slide-up {
+  animation: slideUp 0.3s ease-out;
+}
+
+.animate-blink {
+  animation: blink 1s infinite;
+}
+
+.animate-count {
+  animation: countUp 0.3s ease-out;
+}
+
+/* Boutons tactiles - zones de touch plus grandes */
+.touch-target {
+  min-height: 48px;
+  min-width: 48px;
+}
+
+/* Effet de pression pour les boutons tactiles */
+.touch-feedback:active {
+  transform: scale(0.98);
+  opacity: 0.9;
+}
