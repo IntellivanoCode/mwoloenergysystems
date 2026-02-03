@@ -75,7 +75,7 @@ export const authAPI = {
     api.post('/token/', credentials),
   
   loginWithBadge: (badgeCode: string) =>
-    api.post('/accounts/badge-login/', { badge_code: badgeCode }),
+    api.post('/hr/employees/badge_login/', { badge_code: badgeCode }),
   
   refresh: (refreshToken: string) =>
     api.post('/token/refresh/', { refresh: refreshToken }),
