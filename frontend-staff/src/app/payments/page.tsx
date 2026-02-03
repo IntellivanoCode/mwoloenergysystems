@@ -44,8 +44,9 @@ export default function PaymentsPage() {
 
   const fetchPayments = async () => {
     try {
-      const data = await apiRequest('/billing/payments/');
-      const list = Array.isArray(data) ? data : data.results || [];
+      const result = await apiRequest('/billing/payments/');
+      const rawData = result?.data as { results?: Payment[] } | Payment[] | undefined;
+      const list = Array.isArray(rawData) ? rawData : (rawData?.results || []);
       setPayments(list);
     } catch (err) {
       console.error('Erreur:', err);

@@ -52,8 +52,9 @@ export default function AppointmentsPage() {
 
   const fetchAppointments = async () => {
     try {
-      const data = await apiRequest('/appointments/appointments/');
-      const list = Array.isArray(data) ? data : data.results || [];
+      const result = await apiRequest('/appointments/appointments/');
+      const rawData = result?.data as { results?: Appointment[] } | Appointment[] | undefined;
+      const list = Array.isArray(rawData) ? rawData : (rawData?.results || []);
       setAppointments(list);
     } catch (err) {
       console.error('Erreur:', err);

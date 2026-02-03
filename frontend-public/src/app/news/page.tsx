@@ -120,7 +120,7 @@ export default function NewsPage() {
                 {categories.map(cat => (
                   <button
                     key={cat}
-                    onClick={() => setSelectedCategory(cat)}
+                    onClick={() => setSelectedCategory(cat || 'all')}
                     className={`px-4 py-2 rounded-lg font-medium transition-all ${
                       selectedCategory === cat 
                         ? 'bg-orange-500 text-white' 

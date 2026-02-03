@@ -44,8 +44,9 @@ export default function ClientsPage() {
 
   const fetchClients = async () => {
     try {
-      const data = await apiRequest('/crm/clients/');
-      const list = Array.isArray(data) ? data : data.results || [];
+      const result = await apiRequest('/crm/clients/');
+      const rawData = result?.data as { results?: Client[] } | Client[] | undefined;
+      const list = Array.isArray(rawData) ? rawData : (rawData?.results || []);
       setClients(list);
     } catch (err) {
       console.error('Erreur:', err);

@@ -55,8 +55,9 @@ export default function SupportPage() {
 
   const fetchTickets = async () => {
     try {
-      const data = await apiRequest('/support/tickets/');
-      const list = Array.isArray(data) ? data : data.results || [];
+      const result = await apiRequest('/support/tickets/');
+      const rawData = result?.data as { results?: Ticket[] } | Ticket[] | undefined;
+      const list = Array.isArray(rawData) ? rawData : (rawData?.results || []);
       setTickets(list);
     } catch (err) {
       console.error('Erreur:', err);

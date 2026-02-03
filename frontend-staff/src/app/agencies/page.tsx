@@ -102,10 +102,11 @@ export default function AgenciesPage() {
     setLoading(true);
     const result = await apiRequest('/agencies/agencies/');
     if (result.data) {
-      const data = result.data.results || result.data;
-      setAgencies(Array.isArray(data) ? data : []);
+      const rawData = result.data as { results?: Agency[] } | Agency[];
+      const data = Array.isArray(rawData) ? rawData : (rawData.results || []);
+      setAgencies(data);
       
-      const ags = Array.isArray(data) ? data : [];
+      const ags = data;
       setStats({
         total: ags.length,
         active: ags.filter((a: Agency) => a.is_active).length,

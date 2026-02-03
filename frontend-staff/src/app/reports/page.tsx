@@ -66,7 +66,7 @@ export default function ReportsPage() {
 
     const currentUser = getCurrentUser();
     if (currentUser) {
-      setUser({ name: currentUser.full_name || currentUser.username, role: currentUser.role });
+      setUser({ name: `${currentUser.first_name} ${currentUser.last_name}` || currentUser.username, role: currentUser.role });
     }
 
     loadStats();
@@ -83,10 +83,19 @@ export default function ReportsPage() {
         apiRequest('/support/tickets/'),
       ]);
 
-      const clients = clientsRes.data?.results || clientsRes.data || [];
-      const invoices = invoicesRes.data?.results || invoicesRes.data || [];
-      const payments = paymentsRes.data?.results || paymentsRes.data || [];
-      const tickets = ticketsRes.data?.results || ticketsRes.data || [];
+      // eslint-disable-next-line @typescript-eslint/no-explicit-any
+      const extractData = (res: any) => {
+        if (!res?.data) return [];
+        const d = res.data;
+        if (Array.isArray(d)) return d;
+        if (d.results && Array.isArray(d.results)) return d.results;
+        return [];
+      };
+
+      const clients = extractData(clientsRes);
+      const invoices = extractData(invoicesRes);
+      const payments = extractData(paymentsRes);
+      const tickets = extractData(ticketsRes);
 
       const thisMonth = new Date().getMonth();
       const today = new Date().toISOString().split('T')[0];

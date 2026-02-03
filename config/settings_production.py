@@ -15,8 +15,20 @@ BASE_DIR = Path(__file__).resolve().parent.parent
 SECRET_KEY = os.environ.get('SECRET_KEY', 'change-me-in-production')
 DEBUG = os.environ.get('DEBUG', 'False').lower() == 'true'
 
-# Allowed hosts
-ALLOWED_HOSTS = os.environ.get('ALLOWED_HOSTS', '*').split(',')
+# Allowed hosts - Production domains
+ALLOWED_HOSTS = os.environ.get('ALLOWED_HOSTS', ','.join([
+    'localhost',
+    '127.0.0.1',
+    '.onrender.com',
+    '.mwoloenergysystems.cd',
+    '.mwoloenergysystems.com',
+    'mwoloenergysystems.cd',
+    'www.mwoloenergysystems.cd',
+    'mwoloenergysystems.com',
+    'www.mwoloenergysystems.com',
+    'api.mwoloenergysystems.cd',
+    'api.mwoloenergysystems.com',
+])).split(',')
 
 # Render.com specific
 RENDER_EXTERNAL_HOSTNAME = os.environ.get('RENDER_EXTERNAL_HOSTNAME')
@@ -172,10 +184,28 @@ SIMPLE_JWT = {
     'SIGNING_KEY': os.environ.get('JWT_SECRET_KEY', SECRET_KEY),
 }
 
-# CORS Configuration
+# CORS Configuration - Production domains
 CORS_ALLOWED_ORIGINS = os.environ.get(
     'CORS_ALLOWED_ORIGINS',
-    'https://mwoloenergysystems.onrender.com,https://mwolo-public.onrender.com,https://mwolo-staff.onrender.com,https://mwolo-agency.onrender.com'
+    ','.join([
+        # Render domains
+        'https://mwoloenergysystems.onrender.com',
+        'https://mwolo-public.onrender.com',
+        'https://mwolo-staff.onrender.com',
+        'https://mwolo-agency.onrender.com',
+        'https://mwolo-api.onrender.com',
+        # Custom domains
+        'https://mwoloenergysystems.cd',
+        'https://www.mwoloenergysystems.cd',
+        'https://mwoloenergysystems.com',
+        'https://www.mwoloenergysystems.com',
+        'https://staff.mwoloenergysystems.cd',
+        'https://agency.mwoloenergysystems.cd',
+        'https://api.mwoloenergysystems.cd',
+        'https://staff.mwoloenergysystems.com',
+        'https://agency.mwoloenergysystems.com',
+        'https://api.mwoloenergysystems.com',
+    ])
 ).split(',')
 
 # Allow all origins in dev mode

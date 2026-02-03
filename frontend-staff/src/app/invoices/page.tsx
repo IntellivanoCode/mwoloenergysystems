@@ -49,8 +49,9 @@ export default function InvoicesPage() {
 
   const fetchInvoices = async () => {
     try {
-      const data = await apiRequest('/billing/invoices/');
-      const list = Array.isArray(data) ? data : data.results || [];
+      const result = await apiRequest('/billing/invoices/');
+      const rawData = result?.data as { results?: Invoice[] } | Invoice[] | undefined;
+      const list = Array.isArray(rawData) ? rawData : (rawData?.results || []);
       setInvoices(list);
     } catch (err) {
       console.error('Erreur:', err);

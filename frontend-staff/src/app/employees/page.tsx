@@ -81,11 +81,12 @@ export default function EmployeesPage() {
     setLoading(true);
     const result = await apiRequest('/hr/employees/');
     if (result.data) {
-      const data = result.data.results || result.data;
-      setEmployees(Array.isArray(data) ? data : []);
+      const rawData = result.data as { results?: Employee[] } | Employee[];
+      const data = Array.isArray(rawData) ? rawData : (rawData.results || []);
+      setEmployees(data);
       
       // Calculer les stats
-      const emps = Array.isArray(data) ? data : [];
+      const emps = data;
       setStats({
         total: emps.length,
         active: emps.filter((e: Employee) => e.status === 'active').length,
