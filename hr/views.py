@@ -75,6 +75,104 @@ class EmployeeViewSet(viewsets.ModelViewSet):
         serializer = KeyStaffSerializer(employees, many=True)
         return Response(serializer.data)
 
+    @action(detail=False, methods=['post'], permission_classes=[AllowAny])
+    def validate_badge(self, request):
+        """Valider un badge employé simplement (sans signature cryptographique)"""
+        badge_code = request.data.get('badge_code', '')
+        
+        if not badge_code:
+            return Response({
+                'valid': False,
+                'error': 'Code badge requis'
+            }, status=status.HTTP_400_BAD_REQUEST)
+        
+        # Chercher le badge (status='actif' en français)
+        try:
+            badge = EmployeeBadge.objects.select_related('employee', 'employee__agency').get(
+                badge_code=badge_code,
+                status='actif'
+            )
+        except EmployeeBadge.DoesNotExist:
+            return Response({
+                'valid': False,
+                'error': 'Badge invalide ou inactif'
+            }, status=status.HTTP_404_NOT_FOUND)
+        
+        # Vérifier si le badge est valide (non expiré)
+        if not badge.is_valid():
+            return Response({
+                'valid': False,
+                'error': 'Badge expiré'
+            }, status=status.HTTP_403_FORBIDDEN)
+        
+        employee = badge.employee
+        return Response({
+            'valid': True,
+            'employee_name': f"{employee.first_name} {employee.last_name}",
+            'employee_id': str(employee.id),
+            'agency_id': str(employee.agency_id) if employee.agency_id else None,
+            'agency_name': employee.agency.name if employee.agency else None,
+            'position': employee.position,
+            'badge_status': badge.status,
+        })
+
+    @action(detail=False, methods=['post'], permission_classes=[AllowAny])
+    def badge_login(self, request):
+        """Connexion par badge - retourne un token JWT"""
+        from rest_framework_simplejwt.tokens import RefreshToken
+        
+        badge_code = request.data.get('badge_code', '')
+        
+        if not badge_code:
+            return Response({
+                'error': 'Code badge requis'
+            }, status=status.HTTP_400_BAD_REQUEST)
+        
+        # Chercher le badge (status='actif' en français)
+        try:
+            badge = EmployeeBadge.objects.select_related('employee', 'employee__user', 'employee__agency').get(
+                badge_code=badge_code,
+                status='actif'
+            )
+        except EmployeeBadge.DoesNotExist:
+            return Response({
+                'error': 'Badge invalide ou inactif'
+            }, status=status.HTTP_401_UNAUTHORIZED)
+        
+        if not badge.is_valid():
+            return Response({
+                'error': 'Badge expiré'
+            }, status=status.HTTP_401_UNAUTHORIZED)
+        
+        employee = badge.employee
+        user = employee.user
+        
+        if not user:
+            return Response({
+                'error': 'Aucun compte utilisateur associé à cet employé'
+            }, status=status.HTTP_401_UNAUTHORIZED)
+        
+        # Générer les tokens JWT
+        refresh = RefreshToken.for_user(user)
+        
+        return Response({
+            'access': str(refresh.access_token),
+            'refresh': str(refresh),
+            'user': {
+                'id': str(user.id),
+                'email': user.email,
+                'first_name': user.first_name,
+                'last_name': user.last_name,
+                'role': user.role,
+            },
+            'employee': {
+                'id': str(employee.id),
+                'position': employee.position,
+                'agency_id': str(employee.agency_id) if employee.agency_id else None,
+                'agency_name': employee.agency.name if employee.agency else None,
+            }
+        })
+
 
 class LeaveTypeViewSet(viewsets.ModelViewSet):
     queryset = LeaveType.objects.all()
