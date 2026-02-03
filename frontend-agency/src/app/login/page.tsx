@@ -258,8 +258,8 @@ export default function AgencyLoginPage() {
                   type="text"
                   value={badgeCode}
                   onChange={(e) => setBadgeCode(e.target.value.toUpperCase())}
-                  className="w-full px-4 py-3 border border-gray-200 rounded-xl focus:ring-2 focus:ring-cyan-500 focus:border-transparent transition-all text-center text-lg font-mono tracking-wider"
-                  placeholder="XXXX-XXXX"
+                  className="w-full px-4 py-3 border border-gray-200 rounded-xl focus:ring-2 focus:ring-cyan-500 focus:border-transparent transition-all text-center text-lg font-mono tracking-wider text-gray-900 placeholder-gray-400"
+                  placeholder="MWO-XXXXXXXXXXXX"
                 />
               </div>
 

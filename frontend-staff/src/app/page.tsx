@@ -148,7 +148,7 @@ export default function StaffLoginPage() {
               </svg>
             </div>
             <div>
-              <span className="font-bold text-lg text-white">Mwolo Energy</span>
+              <span className="font-bold text-lg text-white">Mwolo Energy Systems</span>
               <span className="text-indigo-400 text-sm ml-2">Staff Portal</span>
             </div>
           </div>
@@ -166,7 +166,7 @@ export default function StaffLoginPage() {
         <div className="w-full max-w-6xl">
           {/* Titre */}
           <div className="text-center mb-8">
-            <h1 className="text-3xl font-bold text-white mb-2">Espace Personnel Mwolo Energy</h1>
+            <h1 className="text-3xl font-bold text-white mb-2">Espace Personnel Mwolo Energy Systems</h1>
             <p className="text-slate-400">Connectez-vous pour accéder à vos outils</p>
           </div>
 
