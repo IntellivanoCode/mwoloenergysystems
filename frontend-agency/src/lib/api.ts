@@ -6,7 +6,9 @@
  * Authentification par badge employé ou token agence
  */
 
-const API_BASE_URL = process.env.NEXT_PUBLIC_API_URL || 'http://localhost:8000/api';
+// Production API URL - fallback si NEXT_PUBLIC_API_URL n'est pas défini
+const PROD_API_URL = 'https://mwolo-api.onrender.com/api';
+const API_BASE_URL = process.env.NEXT_PUBLIC_API_URL || PROD_API_URL;
 
 const STORAGE_KEYS = {
   AGENCY_TOKEN: 'mwolo_agency_token',
