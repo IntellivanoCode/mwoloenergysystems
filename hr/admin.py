@@ -32,10 +32,10 @@ class EmployeeBadgeAdmin(admin.ModelAdmin):
 
 @admin.register(BadgeScanLog)
 class BadgeScanLogAdmin(admin.ModelAdmin):
-    list_display = ('badge', 'scan_type', 'agency', 'scanned_at', 'success')
-    list_filter = ('scan_type', 'success', 'scanned_at', 'agency')
+    list_display = ('badge', 'scan_type', 'agency', 'scanned_at', 'result')
+    list_filter = ('scan_type', 'result', 'scanned_at', 'agency')
     search_fields = ('badge__badge_code', 'badge__employee__first_name', 'badge__employee__last_name')
-    readonly_fields = ('badge', 'scan_type', 'agency', 'scanned_at', 'success', 'ip_address', 'user_agent')
+    readonly_fields = ('badge', 'scan_type', 'agency', 'scanned_at', 'result', 'ip_address', 'device_info', 'notes')
     date_hierarchy = 'scanned_at'
 
     def has_add_permission(self, request):
