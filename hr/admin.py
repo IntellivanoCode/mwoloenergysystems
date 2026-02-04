@@ -1,5 +1,49 @@
 from django.contrib import admin
-from .models import Employee, LeaveType, Leave, Attendance, Payroll
+from .models import Employee, LeaveType, Leave, Attendance, Payroll, EmployeeBadge, BadgeScanLog
+
+
+@admin.register(EmployeeBadge)
+class EmployeeBadgeAdmin(admin.ModelAdmin):
+    list_display = ('badge_code', 'employee', 'status', 'issued_date', 'expiry_date', 'scan_count')
+    list_filter = ('status', 'issued_date', 'can_access_all_agencies')
+    search_fields = ('badge_code', 'employee__first_name', 'employee__last_name', 'employee__employee_number')
+    readonly_fields = ('badge_code', 'qr_secret', 'scan_count', 'last_scan_at', 'last_scan_agency', 'created_at', 'updated_at')
+    raw_id_fields = ('employee',)
+    fieldsets = (
+        ('Badge', {
+            'fields': ('employee', 'badge_code', 'qr_secret', 'status', 'issued_date', 'expiry_date')
+        }),
+        ('Permissions', {
+            'fields': ('can_access_all_agencies', 'can_activate_monitor', 'can_use_kiosk')
+        }),
+        ('Statistiques', {
+            'fields': ('scan_count', 'last_scan_at', 'last_scan_agency'),
+            'classes': ('collapse',)
+        }),
+        ('Métadonnées', {
+            'fields': ('created_at', 'updated_at'),
+            'classes': ('collapse',)
+        }),
+    )
+
+    def get_queryset(self, request):
+        return super().get_queryset(request).select_related('employee', 'employee__agency', 'last_scan_agency')
+
+
+@admin.register(BadgeScanLog)
+class BadgeScanLogAdmin(admin.ModelAdmin):
+    list_display = ('badge', 'scan_type', 'agency', 'scanned_at', 'success')
+    list_filter = ('scan_type', 'success', 'scanned_at', 'agency')
+    search_fields = ('badge__badge_code', 'badge__employee__first_name', 'badge__employee__last_name')
+    readonly_fields = ('badge', 'scan_type', 'agency', 'scanned_at', 'success', 'ip_address', 'user_agent')
+    date_hierarchy = 'scanned_at'
+
+    def has_add_permission(self, request):
+        return False  # Les logs ne peuvent pas être créés manuellement
+
+    def has_change_permission(self, request, obj=None):
+        return False  # Les logs ne peuvent pas être modifiés
+
 
 @admin.register(Employee)
 class EmployeeAdmin(admin.ModelAdmin):
