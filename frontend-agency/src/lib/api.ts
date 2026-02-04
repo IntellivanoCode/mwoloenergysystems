@@ -1,4 +1,4 @@
-/**
+﻿/**
  * Mwolo Energy Systems - API Library
  * Frontend Agency (Bornes, Tablettes, Écrans d'affichage)
  * 
@@ -345,5 +345,3 @@ export async function getQueueStats(agencyId: string) {
     completed_today: number;
   }>(`/appointments/queue/stats/?agency=${agencyId}`);
 }
-/ /   B u i l d :   2 0 2 6 - 0 2 - 0 4   0 1 : 4 0 : 1 8  
- 
